@@ -60,3 +60,41 @@ CREATE TABLE telemetry (
         REFERENCES mission(mission_id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+-- 1. Видалення зв'язку між таблицями 
+ALTER TABLE drone
+DROP CONSTRAINT fk_drone_operator;
+
+-- 2., 3. Внесення змін до таблиці mission
+
+-- Видалення поля
+ALTER TABLE mission
+DROP COLUMN status;
+-- Зміна типу поля
+ALTER TABLE mission
+ALTER COLUMN start_date TYPE DATE;
+-- Зміна назви поля
+ALTER TABLE mission
+RENAME COLUMN end_date TO completed_at;
+
+-- 4. Додавання поля та обмеження його унікальності в таблиці operator
+
+-- Додавання поля
+ALTER TABLE operator
+ADD COLUMN personal_code VARCHAR(20);
+-- Обмеження унікальності
+ALTER TABLE operator
+ADD CONSTRAINT unique_personal_code UNIQUE (personal_code);
+
+-- 5. Зміна типу обмеження цілісності зв’язку в таблиці mission із operation_zone 
+ALTER TABLE mission DROP CONSTRAINT fk_mission_zone;
+
+ALTER TABLE mission ADD CONSTRAINT fk_mission_zone
+FOREIGN KEY (zone_id)
+REFERENCES operation_zone(zone_id)
+ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+
+
