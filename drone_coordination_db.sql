@@ -94,6 +94,65 @@ FOREIGN KEY (zone_id)
 REFERENCES operation_zone(zone_id)
 ON UPDATE CASCADE ON DELETE CASCADE;
 
+-- Лабораторна робота №4 --
+
+--Одиночне додавання: 
+INSERT INTO operator (last_name, first_name, patronymic, military_rank, phone_number, email, personal_code)
+VALUES ('Шевченко', 'Андрій', 'Іванович', 'Майор', '+380501234567', 'andriy.shevchenko@army.ua', 'OP12345');
+
+-- Групове додавання:
+INSERT INTO operator (last_name, first_name, patronymic, military_rank, phone_number, email, personal_code)
+VALUES
+('Ковальчук', 'Олег', 'Сергійович', 'Старший лейтенант', '+380673456789', 'oleg.k@army.ua', 'OP12346'),
+('Мельник', 'Ірина', 'Василівна', 'Капітан', '+380931112233', 'iryna.m@army.ua', 'OP12347');
+
+INSERT INTO drone (serial_number, model, status, operator_id)
+VALUES
+('DR-0001', 'Mavic Air 2', 'Активний', 1),
+('DR-0002', 'DJI Phantom 4', 'В ремонті', 2);
+
+INSERT INTO operation_zone (zone_name, latitude, longitude, radius_meters)
+VALUES
+('Зона Альфа', 48.450001, 34.983333, 1000),
+('Зона Браво', 49.233334, 28.466667, 800);
+
+INSERT INTO mission (drone_id, zone_id, start_date, completed_at)
+VALUES
+(1, 1, '2025-04-07', '2025-04-07'),
+(2, 2, '2025-04-06', '2025-04-06');
+
+INSERT INTO telemetry (mission_id, timestamp, latitude, longitude, altitude_meters, battery_level_percent, signal_strength_percent)
+VALUES
+(1, '2025-04-07 10:00:00', 48.450002, 34.983334, 100, 95, 90),
+(1, '2025-04-07 10:05:00', 48.450003, 34.983335, 110, 93, 89),
+(2, '2025-04-06 12:00:00', 49.233335, 28.466668, 120, 88, 85);
+
+-- Оновлення одного поля за умовою
+UPDATE drone
+SET status = 'Активний'
+WHERE status = 'В ремонті';
+-- Оновлення кількох полів за умовою
+UPDATE operator
+SET military_rank = 'Капітан',
+    email = 'new_email@army.ua'
+WHERE operator_id = 2;
+-- Змінення значення полів для всіх операторів з певним званням
+UPDATE operator
+SET military_rank = 'Старший сержант'
+WHERE military_rank = 'Сержант';
+-- Оновлення battery_level і signal_strength якщо дрон летів високо
+UPDATE telemetry
+SET battery_level_percent = battery_level_percent - 10,
+    signal_strength_percent = signal_strength_percent - 15
+WHERE altitude_meters > 1000;
+
+-- Видалення одного з полів таблиці operator
+DELETE FROM operator
+WHERE operator_id = 5;
+-- Видалення всіх даних з таблиці
+DELETE FROM drone;
+
+
 
 
 
