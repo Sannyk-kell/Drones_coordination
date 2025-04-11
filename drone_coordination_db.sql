@@ -152,6 +152,41 @@ WHERE operator_id = 5;
 -- Видалення всіх даних з таблиці
 DELETE FROM drone;
 
+-- Лабораторна робота №5 --
+
+-- Створення запиту на об'єднання
+SELECT 
+    last_name AS name, 
+    'Оператор' AS type
+FROM operator
+UNION
+SELECT 
+    model AS name, 
+    'Дрон' AS type
+FROM drone;
+--Створення запиту на виконання перетину: 
+SELECT * 
+FROM drone
+WHERE drone_id IN (
+    SELECT drone_id
+    FROM mission
+    INTERSECT
+    SELECT drone_id
+    FROM drone
+);
+-- Запит на побудову різниці
+SELECT * 
+FROM operation_zone
+WHERE zone_id NOT IN (
+    SELECT zone_id FROM mission
+    WHERE zone_id IS NOT NULL
+);
+
+--Запит на виконання декартового добутку таблиць operator та drone
+SELECT * 
+FROM operator, drone
+WHERE operator.operator_id = drone.operator_id;
+
 
 
 
